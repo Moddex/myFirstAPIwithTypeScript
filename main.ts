@@ -1,21 +1,9 @@
-import * as restify from 'restify';
+import { Server } from './server/server'
 
-const server = restify.createServer({
-    name: 'myFirstAPIwithTypeScript',
-    version: '1.0.0'
+new Server().bootstrap().then(server => {
+    console.log('Server is listening on:', server.application.address());
+}).catch(err => {
+    console.log('Server failed to start');
+    console.error(err);
+    process.exit(1);
 });
-
-server.use(restify.plugins.acceptParser(server.acceptable));
-server.use(restify.plugins.queryParser());
-server.use(restify.plugins.bodyParser());
-
-
-server.get('/hello', (req, res, next) => {
-    res.json({msg: 'Hello'});
-    return next();
-});
-
-server.listen(8080, () => {
-    console.log(`${server.name} está rodando em ${server.url}`);
-})
-
