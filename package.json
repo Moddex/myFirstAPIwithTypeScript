@@ -1,0 +1,19 @@
+{
+  "name": "myFirstAPIwithTypeScript",
+  "version": "1.0.0",
+  "description": "Learning typescript creating API",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon dist/main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "restify": "6.3.4"
+  },
+  "devDependencies": {
+    "@types/restify": "5.0.6",
+    "nodemon": "^1.19.1"
+  }
+}
