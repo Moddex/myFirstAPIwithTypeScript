@@ -1,6 +1,7 @@
-import { Server } from './server/server'
+import { Server } from './server/server';
+import { usersRouter } from './users/users.router'
 
-new Server().bootstrap().then(server => {
+new Server().bootstrap([usersRouter]).then(server => {
     console.log('Server is listening on:', server.application.address());
 }).catch(err => {
     console.log('Server failed to start');
