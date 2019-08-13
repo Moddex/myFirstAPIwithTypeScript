@@ -2,6 +2,7 @@ import * as restify from 'restify';
 import { environment } from '../common/env';
 import { Router } from '../common/router'
 import * as mongoose from 'mongoose';
+import { mergePatchBodyParser } from './merge-patch.parser'
 
 export class Server {
     application: restify.Server;
@@ -23,6 +24,7 @@ export class Server {
                 this.application.use(restify.plugins.acceptParser(this.application.acceptable));
                 this.application.use(restify.plugins.queryParser());
                 this.application.use(restify.plugins.bodyParser());
+                this.application.use(mergePatchBodyParser);
 
                 // Routes
                 for(let router of routers){
