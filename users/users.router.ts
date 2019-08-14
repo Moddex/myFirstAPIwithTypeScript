@@ -3,24 +3,20 @@ import * as restify from 'restify';
 import { User } from './users.model'
 
 class UsersRouter  extends Router {
+    constructor() {
+        super();
+        this.on('beforeRender', document => {
+            document.password = undefined;
+        });
+    }
+
     applyRoutes(application: restify.Server){
         application.get('/users', (req, res, next) => {
-            User.find().then(users => {
-                res.json(users);
-                return next();
-            })
+            User.find().then(this.render(res, next))
         });
 
         application.get('/users/:id', (req, res, next) => {
-            User.findById(req.params.id).then(user => {
-                if(user){
-                    res.json(user);
-                    return next();
-                }
-                
-                res.send(404);
-                return next();
-            });
+            User.findById(req.params.id).then(this.render(res, next));
         });
 
         application.post('/users', (req, res, next) => {
@@ -32,11 +28,8 @@ class UsersRouter  extends Router {
             }
             
             let user = new User(req.body);
-            user.save().then(user => {
-                res.send(201, user);
-            });
-            
-            return next();
+            user.save().then(this.render(res, next));
+
         });
 
         application.put('/users/:id', (req, res, next) => {
@@ -48,28 +41,18 @@ class UsersRouter  extends Router {
                     } else {
                         res.send(404, {err: 'not found'});
                     }
-            }).then(user => {
-                res.json(user);
-                return next();
-            });
+            }).then(this.render(res, next));
         })
 
         application.patch('/users/:id', (req, res,next) => {
             const options = {new: true}
-            User.findOneAndUpdate(req.params.id, req.body, options).then(user => {
-                if(user){
-                    res.json(user);
-                    return next();
-                } else {
-                    res.send(404);
-                    return next();
-                }
-            });
+            User.findOneAndUpdate(req.params.id, req.body, options)
+                .then(this.render(res, next));
         });
 
         application.del('/users/:id', (req, res, next) => {
-            User.remove({_id: req.params.id}).exec().then((resu: any) => {
-                if(resu.result.n){
+            User.remove({_id: req.params.id}).exec().then((res: any) => {
+                if(res.result.n){
                     res.send(204);
                 } else {
                     res.send(404);
