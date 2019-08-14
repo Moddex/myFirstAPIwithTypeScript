@@ -42,7 +42,7 @@ class UsersRouter  extends Router {
         application.put('/users/:id', (req, res, next) => {
             const options = {overwrite: true}
             User.update({_id: req.params.id}, req.body, options)
-                .exec().then(result => {
+                .exec().then((result: any) => {
                     if(result.n){
                         return User.findById(req.params.id)
                     } else {
@@ -64,6 +64,17 @@ class UsersRouter  extends Router {
                     res.send(404);
                     return next();
                 }
+            });
+        });
+
+        application.del('/users/:id', (req, res, next) => {
+            User.remove({_id: req.params.id}).exec().then((resu: any) => {
+                if(resu.result.n){
+                    res.send(204);
+                } else {
+                    res.send(404);
+                }
+                return next();
             });
         });
     }
