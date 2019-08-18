@@ -10,6 +10,12 @@ export abstract class ModelRouter<D extends mongoose.Document> extends Router {
         return query;
     }
 
+    envelope(document: any):any {
+        let resource = Object.assign({_links: {}}, document.toJSON())
+        resource._links.self = `/${this.model.collection.name}/${resource._id}`
+        return resource
+    }
+
     validateId  = (req, res, next) => {
         if(!mongoose.Types.ObjectId.isValid(req.params.id)){
             res.send(404);
